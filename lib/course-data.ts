@@ -1,8 +1,16 @@
 import { CourseProps } from "@/components/courseCard";
 
+// Helper function to create URL-friendly slugs
+const createSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+};
+
 export const allCourses: CourseProps[] = [
   {
-    id: "1",
+    id: "data-science-fundamentals",
     title: "Data Science Fundamentals",
     description:
       "Learn the core concepts of data science, Python programming, and data analysis techniques. This course covers everything from basic statistics to advanced machine learning algorithms.",
@@ -17,7 +25,7 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
   {
-    id: "2",
+    id: "advanced-machine-learning",
     title: "Advanced Machine Learning",
     description:
       "Master machine learning algorithms and build real-world AI applications. Dive deep into neural networks, deep learning, and natural language processing with hands-on projects.",
@@ -32,7 +40,7 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
   {
-    id: "3",
+    id: "full-stack-web-development",
     title: "Full-Stack Web Development",
     description:
       "Build modern web applications with React, Node.js, and MongoDB. Create responsive UIs, RESTful APIs, and integrate with databases in this comprehensive full-stack course.",
@@ -46,7 +54,7 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
   {
-    id: "4",
+    id: "financial-analysis-and-modeling",
     title: "Financial Analysis & Modeling",
     description:
       "Learn financial modeling techniques used by investment banking professionals. Master Excel, financial statement analysis, and build powerful valuation models for businesses.",
@@ -62,7 +70,7 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
   {
-    id: "5",
+    id: "ui-ux-design-principles",
     title: "UI/UX Design Principles",
     description:
       "Master the art of creating beautiful and functional user interfaces. Learn design thinking, wireframing, prototyping, and user testing methodologies.",
@@ -76,7 +84,7 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
   {
-    id: "6",
+    id: "cybersecurity-fundamentals",
     title: "Cybersecurity Fundamentals",
     description:
       "Learn to protect systems and networks from digital attacks. Covers threat detection, encryption, security policies, and ethical hacking techniques.",
@@ -91,7 +99,7 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
   {
-    id: "7",
+    id: "mobile-app-development-react-native",
     title: "Mobile App Development with React Native",
     description:
       "Build cross-platform mobile applications using React Native. Create iOS and Android apps with a single codebase and deploy to app stores.",
@@ -106,7 +114,7 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
   {
-    id: "8",
+    id: "cloud-computing-aws",
     title: "Cloud Computing with AWS",
     description:
       "Master Amazon Web Services and build scalable cloud infrastructure. Learn EC2, S3, Lambda, and best practices for cloud architecture.",
@@ -120,6 +128,11 @@ export const allCourses: CourseProps[] = [
       "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
   },
 ];
+
+export const getAllCategories = () => {
+  const categories = new Set(allCourses.map((course) => course.category));
+  return Array.from(categories);
+};
 
 export const getCourseById = (id: string): CourseProps | undefined => {
   return allCourses.find((course) => course.id === id);
@@ -137,7 +150,7 @@ export const getDiscountedCourses = (): CourseProps[] => {
   return allCourses.filter((course) => course.discount !== undefined);
 };
 
-export const getAllCategories = (): string[] => {
-  const categories = allCourses.map((course) => course.category);
-  return [...new Set(categories)];
+// Helper function to get course by slug
+export const getCourseBySlug = (slug: string): CourseProps | undefined => {
+  return allCourses.find((course) => createSlug(course.title) === slug);
 };

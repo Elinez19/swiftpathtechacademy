@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const featuredCourses: CourseProps[] = [
   {
-    id: "1",
+    id: "data-science-fundamentals",
     title: "Data Science Fundamentals",
     description:
       "Learn the core concepts of data science, Python programming, and data analysis techniques.",
@@ -17,7 +17,7 @@ const featuredCourses: CourseProps[] = [
     popular: true,
   },
   {
-    id: "2",
+    id: "advanced-machine-learning",
     title: "Advanced Machine Learning",
     description:
       "Master machine learning algorithms and build real-world AI applications.",
@@ -30,7 +30,7 @@ const featuredCourses: CourseProps[] = [
     category: "Machine Learning",
   },
   {
-    id: "3",
+    id: "full-stack-web-development",
     title: "Full-Stack Web Development",
     description:
       "Build modern web applications with React, Node.js, and MongoDB.",
@@ -42,7 +42,7 @@ const featuredCourses: CourseProps[] = [
     category: "Web Development",
   },
   {
-    id: "4",
+    id: "financial-analysis-and-modeling",
     title: "Financial Analysis & Modeling",
     description:
       "Learn financial modeling techniques used by investment banking professionals.",

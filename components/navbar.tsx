@@ -56,9 +56,9 @@ const Navbar = () => {
               <Button variant="ghost" size="icon">
                 <Bell className="h-5 w-5" />
               </Button>
-              <Link href="/login">
+              <Link href="/sign-in">
                 <Button variant="outline" size="sm">
-                  Log in
+                  Sign in
                 </Button>
               </Link>
               <Link href="/sign-up">
@@ -86,13 +86,13 @@ const Navbar = () => {
             <nav className="flex flex-col space-y-2">
               <NavLink href="/">Home</NavLink>
               <NavLink href="/courses">Courses</NavLink>
-              <NavLink href="/pricing">Pricing</NavLink>
               <NavLink href="/about">About</NavLink>
+              <NavLink href="/contact">Contact</NavLink>
             </nav>
             <div className="flex items-center gap-2 mt-4">
-              <Link href="/login" className="w-full">
+              <Link href="/sign-in" className="w-full">
                 <Button variant="outline" className="w-full">
-                  Log in
+                  Sign in
                 </Button>
               </Link>
               <Link href="/sign-up" className="w-full">
