@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/tooltip";
 import { DashboardHeader } from "./components/DashboardHeader";
 import { DashboardFooter } from "./components/DashboardFooter";
+import { getCurrentUser, signOut } from "@/lib/auth";
 
 interface SidebarLink {
   icon: React.ElementType;
@@ -143,12 +144,35 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  // TODO: Replace with actual auth logic
-  const userRole: "admin" | "tutor" | "student" = "admin";
+
+  // Get current user and their role
+  const user = getCurrentUser();
+  const userRole = user?.role || "admin"; // Fallback to admin for demo
+
+  // Check authentication
+  useEffect(() => {
+    if (!user) {
+      router.push("/sign-in");
+    }
+  }, [user, router]);
 
   const filteredLinks = sidebarLinks.filter((link) => link.role === userRole);
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push("/sign-in");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  if (!user) {
+    return null; // Don't render anything while checking auth
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -168,6 +192,34 @@ export default function DashboardLayout({
                 <span className="font-semibold">SwiftPath</span>
                 <span className="text-xs text-muted-foreground">Dashboard</span>
               </Link>
+            )}
+          </div>
+
+          {/* User Info */}
+          <div className="border-b p-4">
+            {isSidebarCollapsed ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex justify-center">
+                      <User className="h-6 w-6" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>{user.name}</p>
+                    <p className="text-xs text-muted-foreground capitalize">
+                      {user.role}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <div className="space-y-1">
+                <p className="font-medium">{user.name}</p>
+                <p className="text-sm text-muted-foreground capitalize">
+                  {user.role}
+                </p>
+              </div>
             )}
           </div>
 
@@ -236,20 +288,28 @@ export default function DashboardLayout({
 
           {/* Sidebar Footer */}
           <div className="border-t p-4">
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full",
-                isSidebarCollapsed ? "justify-center" : "justify-start gap-2"
-              )}
-              onClick={() => {
-                // TODO: Add logout logic
-                console.log("Logout");
-              }}
-            >
-              <LogOut className="h-4 w-4" />
-              {!isSidebarCollapsed && "Logout"}
-            </Button>
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full",
+                      isSidebarCollapsed
+                        ? "justify-center"
+                        : "justify-start gap-2"
+                    )}
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    {!isSidebarCollapsed && "Logout"}
+                  </Button>
+                </TooltipTrigger>
+                {isSidebarCollapsed && (
+                  <TooltipContent side="right">Logout</TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </aside>

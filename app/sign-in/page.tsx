@@ -83,7 +83,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+    <div className="container flex h-screen w-screen flex-col items-center justify-center mt-60 mb-60">
       <Card className="w-full max-w-[400px]">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Sign in</CardTitle>

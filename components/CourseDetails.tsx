@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getCoursesByCategory } from "@/lib/course-data";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/dialog";
 import RelatedCourses from "@/components/relatedCourse";
 import { CourseProps } from "./courseCard";
+import { getCurrentUser } from "@/lib/auth";
 
 // Define a type for lesson
 interface Lesson {
@@ -56,8 +58,11 @@ interface CourseDetailsProps {
 }
 
 export default function CourseDetails({ course }: CourseDetailsProps) {
+  const router = useRouter();
   const { toast } = useToast();
   const [previewLesson, setPreviewLesson] = useState<Lesson | null>(null);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const currentUser = getCurrentUser();
 
   // Course curriculum modules
   const curriculumModules = [
@@ -124,10 +129,27 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
     : course.price;
 
   const handleEnroll = () => {
-    toast({
-      title: "Course Added",
-      description: `You've been enrolled in "${course.title}"`,
-    });
+    if (!currentUser) {
+      // Show auth dialog
+      setShowAuthDialog(true);
+      return;
+    }
+
+    // If user is logged in, proceed with enrollment
+    if (currentUser.role === "student") {
+      toast({
+        title: "Course Added",
+        description: `You've been enrolled in "${course.title}"`,
+      });
+      // Redirect to student dashboard
+      router.push("/dashboard/student/courses");
+    } else {
+      toast({
+        title: "Invalid Role",
+        description: "Only students can enroll in courses",
+        variant: "destructive",
+      });
+    }
   };
 
   // Get related courses from the same category
@@ -210,60 +232,35 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
               </div>
 
               {/* Enrollment Card */}
-              <div>
-                <div className="glass-card p-6 rounded-xl sticky top-24">
-                  {/* Video Preview */}
+              <div className="lg:sticky lg:top-24">
+                <div className="bg-card rounded-xl border p-6">
                   <div className="mb-6">
-                    <div
-                      className="relative rounded-lg overflow-hidden aspect-video mb-3 cursor-pointer group"
-                      onClick={() => handlePreview(courseIntroVideo)}
-                    >
-                      <Image
-                        src={course.image || "/placeholder.svg"}
-                        alt="Course preview"
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors">
-                        <div className="w-12 h-12 rounded-full bg-primary/90 flex items-center justify-center">
-                          <Play className="h-6 w-6 text-white fill-white ml-1" />
-                        </div>
-                      </div>
-                      <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                        {courseIntroVideo.duration}
-                      </div>
-                    </div>
-                    <p className="text-sm text-center text-muted-foreground">
-                      Click to watch course preview
-                    </p>
-                  </div>
-
-                  {/* Price and Enrollment */}
-                  <div className="text-center mb-6">
-                    <div className="mb-4">
-                      {course.discount ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <span className="text-3xl font-bold">
-                            ${discountedPrice.toFixed(2)}
-                          </span>
-                          <span className="text-xl text-muted-foreground line-through">
-                            ${course.price.toFixed(2)}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-3xl font-bold">
-                          ${course.price.toFixed(2)}
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className="text-3xl font-bold">
+                        ${discountedPrice}
+                      </span>
+                      {course.discount && (
+                        <span className="text-xl text-muted-foreground line-through">
+                          ${course.price}
                         </span>
                       )}
                     </div>
-                    <Button
-                      className="w-full bg-hero-gradient hover:opacity-90 py-6 text-lg"
-                      onClick={handleEnroll}
-                    >
-                      Enroll Now
-                    </Button>
+                    {course.discount && (
+                      <Badge variant="secondary" className="mb-4">
+                        {course.discount}% off
+                      </Badge>
+                    )}
                   </div>
+
+                  <Button
+                    size="lg"
+                    className="w-full mb-4"
+                    onClick={handleEnroll}
+                  >
+                    {currentUser?.role === "student"
+                      ? "Enroll Now"
+                      : "Get Started"}
+                  </Button>
 
                   {/* Course Includes */}
                   <div>
@@ -459,6 +456,37 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
               />
             </div>
             <DialogClose />
+          </DialogContent>
+        </Dialog>
+
+        {/* Auth Dialog */}
+        <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Sign up to enroll</DialogTitle>
+              <DialogDescription>
+                Create an account or sign in to enroll in this course.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-4">
+              <Button
+                onClick={() => {
+                  setShowAuthDialog(false);
+                  router.push("/sign-up");
+                }}
+              >
+                Create Account
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowAuthDialog(false);
+                  router.push("/sign-in");
+                }}
+              >
+                Sign In
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
       </main>

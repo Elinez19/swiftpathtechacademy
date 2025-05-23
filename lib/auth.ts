@@ -41,6 +41,9 @@ export interface AuthUser {
   role: "admin" | "tutor" | "student";
 }
 
+// Current user session
+let currentUser: AuthUser | null = null;
+
 export async function signUp(userData: UserData) {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -74,13 +77,23 @@ export async function signIn(credentials: {
   // For demo purposes, we're not doing actual password comparison
   // In a real app, you would hash and compare passwords
 
-  return {
-    user: {
-      email: user.email,
-      name: user.name,
-      role: user.role,
-    },
+  currentUser = {
+    email: user.email,
+    name: user.name,
+    role: user.role,
   };
+
+  return { user: currentUser };
+}
+
+export async function signOut() {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  currentUser = null;
+}
+
+export function getCurrentUser() {
+  return currentUser;
 }
 
 export function getDashboardPath(role: "admin" | "tutor" | "student") {
