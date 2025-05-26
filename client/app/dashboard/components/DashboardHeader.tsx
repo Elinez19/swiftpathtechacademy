@@ -1,6 +1,6 @@
 import { Bell, Menu, Search, User, X } from "lucide-react";
-import { Button } from "@/client/components/ui/button";
-import { Input } from "@/client/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/client/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 interface DashboardHeaderProps {
   isSidebarOpen: boolean;

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "@/client/components/ui/button";
-import { Input } from "@/client/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -9,17 +9,17 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "@/client/components/ui/dialog";
-import { Label } from "@/client/components/ui/label";
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/client/components/ui/select";
-import { Alert, AlertDescription } from "@/client/components/ui/alert";
-import { Textarea } from "@/client/components/ui/textarea";
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Textarea } from "@/components/ui/textarea";
 
 interface SignUpFormData {
   name: string;

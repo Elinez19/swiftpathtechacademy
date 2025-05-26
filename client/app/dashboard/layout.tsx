@@ -21,8 +21,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
-import { cn } from "@/client/lib/utils";
-import { Button } from "@/client/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,17 +30,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/client/components/ui/dropdown-menu";
-import { Input } from "@/client/components/ui/input";
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/client/components/ui/tooltip";
+} from "@/components/ui/tooltip";
 import { DashboardHeader } from "./components/DashboardHeader";
 import { DashboardFooter } from "./components/DashboardFooter";
-import { getCurrentUser, signOut } from "@/client/lib/auth";
+import { getCurrentUser, signOut } from "@/lib/auth";
 
 interface SidebarLink {
   icon: React.ElementType;
